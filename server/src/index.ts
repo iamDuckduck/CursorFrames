@@ -1,14 +1,13 @@
 import express from "express";
-// import "express-async-errors";
+import "express-async-errors";
 import { logger, handleRejection } from "./startup/logger";
+import routes from "./startup/routes";
 
 const app = express();
 const env = process.env.NODE_ENV;
 
 handleRejection(); //it handles unhandled rejected promise outside the route scope
-// enableCors(app); //enable cors when it's in development, disable in production
-// enableSession(app); // enable session
-// routes(app); //set up all the routes
+routes(app); //set up all the routes
 
 const port = 3000;
 
