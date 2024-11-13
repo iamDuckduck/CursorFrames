@@ -79,7 +79,7 @@ const Dropzone = () => {
   //must include the style in getRootProps({})
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop, //when file drops
-    accept: { "image/gif": [], "image/ani": [] },
+    accept: { "image/gif": [".gif"], "image/ani": [".ani"] },
     maxSize: 1024 * 1000 * 10,
     validator: duplicatedValidator(files),
   });
