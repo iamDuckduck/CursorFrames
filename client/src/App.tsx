@@ -1,8 +1,6 @@
-import FileInput from "./component/FileInput";
-import DragDropFile from "./component/DragDropFile";
 import HomeHeading from "./component/HomeHeading";
 import Dropzone from "./component/DropZone";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 function App() {
   return (
