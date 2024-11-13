@@ -1,10 +1,10 @@
-import { savedFile } from "./DropZone";
 import { Box, Heading, Text, Image, CloseButton } from "@chakra-ui/react";
-import AniToCss from "./aniToCss";
+import FileAniItem from "./FileAniItem";
+import { acceptedFile } from "../entities/acceptedFile";
 
 interface Props {
-  files: savedFile[];
-  setFiles: (files: savedFile[]) => void;
+  files: acceptedFile[];
+  setFiles: (files: acceptedFile[]) => void;
 }
 
 const FileList = ({ files, setFiles }: Props) => {
@@ -26,7 +26,8 @@ const FileList = ({ files, setFiles }: Props) => {
           marginY={3}
         >
           <Text paddingBottom={5}>{file.name}</Text>
-          {file.name.split(".")[1] == "gif" ? (
+
+          {file.name.split(",")[1] == "gif" ? (
             <Image
               src={file.preview}
               alt={file.name}
@@ -37,8 +38,9 @@ const FileList = ({ files, setFiles }: Props) => {
               }}
             ></Image>
           ) : (
-            <AniToCss selector={file.name} aniFile={file}></AniToCss>
+            <FileAniItem aniFile={file}></FileAniItem>
           )}
+
           <CloseButton
             position="absolute"
             top="0"
