@@ -2,13 +2,11 @@ import { Box, Text, useToast } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import FileList from "./FileList";
-
-export interface savedFile extends File {
-  preview: string;
-}
+import { acceptedFile } from "../entities/acceptedFile";
+import { useAcceptedFileStore } from "../store";
 
 //it receives savedFiles param when it calls and return the actual validation function as reference
-const duplicatedValidator = (savedFiles: savedFile[]) => (newFile: File) => {
+const duplicatedValidator = (savedFiles: acceptedFile[]) => (newFile: File) => {
   const duplicatedFile = savedFiles.find((file) => file.name === newFile.name);
   if (duplicatedFile)
     return {
@@ -20,21 +18,25 @@ const duplicatedValidator = (savedFiles: savedFile[]) => (newFile: File) => {
 
 const Dropzone = () => {
   const style = {
+    //style for drop area
     height: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   };
 
-  const [files, setFiles] = useState<savedFile[]>([]); //stores accpetedFiles
-  const [rejected, setRejected] = useState<FileRejection[]>([]);
+  // const [files, setFiles] = useState<acceptedFile[]>([]); //stores accpetedFiles
+  const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
+  const setFiles = useAcceptedFileStore((s) => s.setAcceptedFiles);
+  const [rejected, setRejected] = useState<FileRejection[]>([]); //stores rejected files
 
-  const toast = useToast();
+  const toast = useToast(); //ui toast
 
-  // avoid recreating the function
+  // avoid recreating the function with useCallback
   const onDrop = useCallback(
+    //the callback function file drops
+    //handles accepted files
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
-      //handles accepted files
       if (acceptedFiles.length) {
         toast({
           title: `total ${acceptedFiles.length} files uploaded`,
@@ -43,12 +45,21 @@ const Dropzone = () => {
           isClosable: true,
           position: "top",
         });
-        setFiles((previousFiles) => [
-          ...previousFiles,
+
+        const newFile = [
+          ...files,
           ...acceptedFiles.map((file: File) =>
             Object.assign(file, { preview: URL.createObjectURL(file) })
           ),
-        ]);
+        ];
+
+        setFiles(newFile);
+        // setFiles((previousFiles) => [
+        //   ...previousFiles,
+        //   ...acceptedFiles.map((file: File) =>
+        //     Object.assign(file, { preview: URL.createObjectURL(file) })
+        //   ),
+        // ]);
       }
 
       //handles rejected files
@@ -79,9 +90,9 @@ const Dropzone = () => {
   //must include the style in getRootProps({})
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop, //when file drops
-    accept: { "image/gif": [".gif"], "image/ani": [".ani"] },
-    maxSize: 1024 * 1000 * 10,
-    validator: duplicatedValidator(files),
+    accept: { "image/gif": [".gif"], "image/ani": [".ani"] }, //files we accept
+    maxSize: 1024 * 1000 * 10, //max size
+    validator: duplicatedValidator(files), //custom validator that prevents duplication
   });
 
   return (
