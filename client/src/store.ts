@@ -9,7 +9,7 @@ interface acceptedFileStore {
 export const useAcceptedFileStore = create<acceptedFileStore>((set) => ({
   files: [],
   setAcceptedFiles: (newFiles: acceptedFile[]) =>
-    set(() => ({
-      files: newFiles,
+    set((state) => ({
+      files: [...state.files, ...newFiles],
     })),
 }));

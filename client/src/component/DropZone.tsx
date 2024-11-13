@@ -1,7 +1,6 @@
 import { Box, Text, useToast } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
-import FileList from "./FileList";
 import { acceptedFile } from "../entities/acceptedFile";
 import { useAcceptedFileStore } from "../store";
 
@@ -84,7 +83,7 @@ const Dropzone = () => {
         setRejected((previousFiles) => [...previousFiles, ...rejectedFiles]);
       }
     },
-    []
+    [setFiles]
   );
 
   //must include the style in getRootProps({})
@@ -107,8 +106,6 @@ const Dropzone = () => {
           </Text>
         )}
       </Box>
-
-      <FileList files={files} setFiles={setFiles}></FileList>
     </>
   );
 };

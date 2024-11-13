@@ -1,6 +1,8 @@
 import HomeHeading from "./component/HomeHeading";
 import Dropzone from "./component/DropZone";
 import { Box } from "@chakra-ui/react";
+import { useAcceptedFileStore } from "./store";
+import FileList from "./component/FileList";
 
 function App() {
   return (
@@ -8,6 +10,7 @@ function App() {
       <HomeHeading></HomeHeading>
       <Box margin={5} height="200px" border="dashed" borderRadius="40px">
         <Dropzone></Dropzone>
+        <FileList></FileList>
       </Box>
     </>
   );

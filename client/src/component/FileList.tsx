@@ -1,13 +1,11 @@
 import { Box, Heading, Text, Image, CloseButton } from "@chakra-ui/react";
 import FileAniItem from "./FileAniItem";
-import { acceptedFile } from "../entities/acceptedFile";
+import { useAcceptedFileStore } from "../store";
 
-interface Props {
-  files: acceptedFile[];
-  setFiles: (files: acceptedFile[]) => void;
-}
+const FileList = () => {
+  const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
+  const setFiles = useAcceptedFileStore((s) => s.setAcceptedFiles);
 
-const FileList = ({ files, setFiles }: Props) => {
   const removeFile = (name: string) => {
     const filteredFile = files.filter((file) => file.name !== name);
     setFiles(filteredFile);
