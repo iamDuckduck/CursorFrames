@@ -4,37 +4,24 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { acceptedFile } from "../entities/acceptedFile";
 import { useAcceptedFileStore } from "../store";
 
-//it receives savedFiles param when it calls and return the actual validation function as reference
-const duplicatedValidator = (savedFiles: acceptedFile[]) => (newFile: File) => {
-  const duplicatedFile = savedFiles.find((file) => file.name === newFile.name);
-  if (duplicatedFile)
-    return {
-      code: "duplicated file",
-      message: "don't upload a duplicated file",
-    };
-  return null;
-};
-
 const Dropzone = () => {
+  //style for drop area
   const style = {
-    //style for drop area
     height: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   };
 
-  // const [files, setFiles] = useState<acceptedFile[]>([]); //stores accpetedFiles
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setFiles = useAcceptedFileStore((s) => s.setAcceptedFiles);
   const [rejected, setRejected] = useState<FileRejection[]>([]); //stores rejected files
 
   const toast = useToast(); //ui toast
 
-  // avoid recreating the function with useCallback
+  // avoid recreating the function by using useCallback
   const onDrop = useCallback(
-    //the callback function file drops
-    //handles accepted files
+    //function handles accepted files
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (acceptedFiles.length) {
         toast({
@@ -45,20 +32,13 @@ const Dropzone = () => {
           position: "top",
         });
 
-        const newFile = [
+        const newFiles = [
           ...files,
           ...acceptedFiles.map((file: File) =>
             Object.assign(file, { preview: URL.createObjectURL(file) })
           ),
         ];
-
-        setFiles(newFile);
-        // setFiles((previousFiles) => [
-        //   ...previousFiles,
-        //   ...acceptedFiles.map((file: File) =>
-        //     Object.assign(file, { preview: URL.createObjectURL(file) })
-        //   ),
-        // ]);
+        setFiles(newFiles);
       }
 
       //handles rejected files
@@ -108,6 +88,19 @@ const Dropzone = () => {
       </Box>
     </>
   );
+};
+
+//utility function
+
+//it receives savedFiles param and return a reference of the validation function that receives a File type Param
+const duplicatedValidator = (savedFiles: acceptedFile[]) => (newFile: File) => {
+  const duplicatedFile = savedFiles.find((file) => file.name === newFile.name);
+  if (duplicatedFile)
+    return {
+      code: "duplicated file",
+      message: "don't upload a duplicated file",
+    };
+  return null;
 };
 
 export default Dropzone;
