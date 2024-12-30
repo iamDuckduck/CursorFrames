@@ -13,7 +13,7 @@ const port = 3000;
 
 env !== "test"
   ? app.listen(port, () => logger.info(`Listening on port 3000...`))
-  : logger.info(`not listening to any port (test env)`); //we need to dynamically assign ports when testing api
+  : logger.info(`not listening to any port (test env)`); //may dynamically assign ports when testing api
 
 // // Export the app as the default export
 export default app;
