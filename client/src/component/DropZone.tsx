@@ -5,6 +5,26 @@ import { acceptedFile } from "../entities/acceptedFile";
 import { useAcceptedFileStore } from "../store";
 
 const Dropzone = () => {
+  const toast = useToast(); //ui toast
+  const successToast = (fileLength: number) =>
+    toast({
+      title: `total ${fileLength} files uploaded`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
+
+  const failedToast = (errorMessage: string, fileLength?: number) =>
+    toast({
+      title: `${fileLength} files have error`,
+      description: <Text whiteSpace="pre-line">{errorMessage}</Text>, //pre-line
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
+
   //style for drop area
   const style = {
     height: "100%",
@@ -15,23 +35,14 @@ const Dropzone = () => {
 
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setFiles = useAcceptedFileStore((s) => s.setAcceptedFiles);
-  const [rejected, setRejected] = useState<FileRejection[]>([]); //stores rejected files
-
-  const toast = useToast(); //ui toast
+  // const [rejected, setRejected] = useState<FileRejection[]>([]); //stores rejected files
 
   // avoid recreating the function by using useCallback
   const onDrop = useCallback(
     //function handles accepted files
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (acceptedFiles.length) {
-        toast({
-          title: `total ${acceptedFiles.length} files uploaded`,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-
+        successToast(acceptedFiles.length);
         const newFiles = [
           ...files,
           ...acceptedFiles.map((file: File) =>
@@ -51,19 +62,12 @@ const Dropzone = () => {
               .join(", ")}\n`)
         );
 
-        toast({
-          title: `${rejectedFiles.length} files have error`,
-          description: errorMessage,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
+        failedToast(errorMessage, rejectedFiles?.length);
 
-        setRejected((previousFiles) => [...previousFiles, ...rejectedFiles]);
+        // setRejected((previousFiles) => [...previousFiles, ...rejectedFiles]); //is this needed..?
       }
     },
-    [setFiles]
+    [] //was [setFiles]
   );
 
   //must include the style in getRootProps({})
