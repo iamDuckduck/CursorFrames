@@ -4,6 +4,7 @@ import { acceptedFile } from "./entities/acceptedFile";
 interface acceptedFileStore {
   files: acceptedFile[];
   setAcceptedFiles: (newFiles: acceptedFile[]) => void;
+  removeFiles: (filteredFiles: acceptedFile[]) => void;
 }
 
 export const useAcceptedFileStore = create<acceptedFileStore>((set) => ({
@@ -11,5 +12,9 @@ export const useAcceptedFileStore = create<acceptedFileStore>((set) => ({
   setAcceptedFiles: (newFiles: acceptedFile[]) =>
     set((state) => ({
       files: [...state.files, ...newFiles],
+    })),
+  removeFiles: (filteredFiles: acceptedFile[]) =>
+    set(() => ({
+      files: filteredFiles,
     })),
 }));

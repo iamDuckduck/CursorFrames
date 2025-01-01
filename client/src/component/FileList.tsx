@@ -4,7 +4,7 @@ import { useAcceptedFileStore } from "../store";
 
 const FileList = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
-  const setFiles = useAcceptedFileStore((s) => s.setAcceptedFiles);
+  const setFiles = useAcceptedFileStore((s) => s.removeFiles);
 
   const removeFile = (name: string) => {
     const filteredFile = files.filter((file) => file.name !== name);
@@ -25,7 +25,7 @@ const FileList = () => {
         >
           <Text paddingBottom={5}>{file.name}</Text>
 
-          {file.name.split(",")[1] == "gif" ? (
+          {file.name.split(".")[1] == "gif" ? (
             <Image
               src={file.preview}
               alt={file.name}
