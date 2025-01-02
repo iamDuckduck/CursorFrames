@@ -1,7 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { useAcceptedFileStore } from "../store";
 import useConvertAlltoFrames from "../hooks/useConvertAlltoFrames";
-// import useGiftoFrames from "../hooks/useGiftoFrames";
 
 const ConvertButton = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles

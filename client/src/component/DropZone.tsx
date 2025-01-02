@@ -50,6 +50,7 @@ const Dropzone = () => {
             Object.assign(file, {
               preview: URL.createObjectURL(file),
               status: FileStatus.UPLOADED,
+              downloadLink: "",
             })
           ),
         ];

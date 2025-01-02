@@ -5,10 +5,12 @@ import {
   Image,
   CloseButton,
   Spinner,
+  Button,
 } from "@chakra-ui/react";
 import FileAniItem from "./FileAniItem";
 import { useAcceptedFileStore } from "../store";
 import { FileStatus } from "../entities/fileStatus";
+import { acceptedFile } from "../entities/acceptedFile";
 
 const FileList = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
@@ -16,6 +18,14 @@ const FileList = () => {
   const filterAndUpdateFiles = (name: string) => {
     const filteredFile = files.filter((file) => file.name !== name);
     setUpdateFiles(filteredFile);
+  };
+
+  const handleDownload = (URL: string, file: acceptedFile) => {
+    // Create a temporary link element to trigger the download
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL;
+    downloadLink.download = `${file.name.split(".")[0]}.zip`; // Default filename for the download
+    downloadLink.click(); // Programmatically click the link to trigger the download
   };
 
   return (
@@ -54,6 +64,13 @@ const FileList = () => {
             aria-label="cancel"
             onClick={() => filterAndUpdateFiles(file.name)}
           ></CloseButton>
+          {file.downloadLink ? (
+            <Button
+              onClick={() => handleDownload(file.downloadLink, file)}
+            ></Button>
+          ) : (
+            <></>
+          )}
         </Box>
       ))}
     </>

@@ -7,35 +7,32 @@ import { acceptedFile } from "../entities/acceptedFile";
 
 const apiClent = new APIClient("/toFrames/gifToFrames");
 
-const handleDownload = (blob: Blob) => {
-  // Create a temporary link element to trigger the download
-  const downloadLink = document.createElement("a");
-  downloadLink.href = URL.createObjectURL(blob); // Create a Blob URL
-  downloadLink.download = "frames.zip"; // Default filename for the download
-  downloadLink.click(); // Programmatically click the link to trigger the download
-};
-
-const updateStatus = (
+const updateFileStatus = (
   files: acceptedFile[],
   gifFile: File,
-  status: FileStatus
+  status: FileStatus,
+  zipFile?: Blob
 ) => {
-  return files.map((file) => {
-    if (file.name === gifFile.name) {
-      const returnedTarget = Object.assign(file, {
-        status: status,
-      });
-      return returnedTarget;
+  let updateProperty = { status: status, downloadLink: "" };
+  //update the status of specific file
+  const updatedFiles = files.map((file) => {
+    if (file.name === gifFile.name && status == FileStatus.SUCCESS && zipFile) {
+      updateProperty.downloadLink = URL.createObjectURL(zipFile);
+      return Object.assign(file, updateProperty);
+    } else if (file.name === gifFile.name) {
+      return Object.assign(file, updateProperty);
     } else return file;
   });
+  return updatedFiles;
 };
 
 const useGiftoFrames = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setUpdateFiles = useAcceptedFileStore((s) => s.setUpdateFiles);
+
   return useMutation<any, AxiosError, File>({
     mutationFn: (fileToConvert: File) => {
-      const updatedFiles = updateStatus(
+      const updatedFiles = updateFileStatus(
         files,
         fileToConvert,
         FileStatus.CONVERTING
@@ -43,14 +40,14 @@ const useGiftoFrames = () => {
       setUpdateFiles(updatedFiles);
       return apiClent.post(fileToConvert);
     },
-    onSuccess(zipFile: Blob, fileToConvert: File) {
-      const updatedFiles = updateStatus(
+    onSuccess(convertedFile: Blob, fileToConvert: File) {
+      const updatedFiles = updateFileStatus(
         files,
         fileToConvert,
-        FileStatus.SUCCESS
+        FileStatus.SUCCESS,
+        convertedFile
       );
       setUpdateFiles(updatedFiles);
-      handleDownload(zipFile);
     },
     onError() {
       //set file property status as error..?
