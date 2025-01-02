@@ -1,14 +1,21 @@
-import { Box, Heading, Text, Image, CloseButton } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  Image,
+  CloseButton,
+  Spinner,
+} from "@chakra-ui/react";
 import FileAniItem from "./FileAniItem";
 import { useAcceptedFileStore } from "../store";
+import { FileStatus } from "../entities/fileStatus";
 
 const FileList = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
-  const setFiles = useAcceptedFileStore((s) => s.removeFiles);
-
-  const removeFile = (name: string) => {
+  const setUpdateFiles = useAcceptedFileStore((s) => s.setUpdateFiles);
+  const filterAndUpdateFiles = (name: string) => {
     const filteredFile = files.filter((file) => file.name !== name);
-    setFiles(filteredFile);
+    setUpdateFiles(filteredFile);
   };
 
   return (
@@ -39,12 +46,13 @@ const FileList = () => {
             <FileAniItem aniFile={file}></FileAniItem>
           )}
 
+          {file.status == FileStatus.CONVERTING ? <Spinner></Spinner> : <></>}
           <CloseButton
             position="absolute"
             top="0"
             right="0"
             aria-label="cancel"
-            onClick={() => removeFile(file.name)}
+            onClick={() => filterAndUpdateFiles(file.name)}
           ></CloseButton>
         </Box>
       ))}
