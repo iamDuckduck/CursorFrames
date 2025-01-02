@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { acceptedFile } from "../entities/acceptedFile";
 import { useAcceptedFileStore } from "../store";
+import { FileStatus } from "../entities/fileStatus";
 
 const Dropzone = () => {
   const toast = useToast(); //ui toast
@@ -46,7 +47,10 @@ const Dropzone = () => {
         const newFiles = [
           ...files,
           ...acceptedFiles.map((file: File) =>
-            Object.assign(file, { preview: URL.createObjectURL(file) })
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+              status: FileStatus.UPLOADED,
+            })
           ),
         ];
         setFiles(newFiles);
