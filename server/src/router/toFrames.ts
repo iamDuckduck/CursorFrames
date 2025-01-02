@@ -2,6 +2,7 @@ import Express from "express";
 import multer from "multer";
 import FramesToZip from "../utility/FramesToZip";
 import gifToFrames from "../utility/gifToFrames";
+import archiver from "archiver";
 
 const router = Express.Router();
 
@@ -21,7 +22,15 @@ router.post(
 
     const frameData = await gifToFrames(req.file?.buffer);
 
-    await FramesToZip(frameData, res);
+    // Create a writable stream to output the zip file
+    const archive = archiver("zip", {
+      zlib: { level: 9 }, // Set compression level
+    });
+
+    // Pipe the archive data to the response object
+    archive.pipe(res);
+
+    await FramesToZip(frameData, archive); //
   }
 );
 

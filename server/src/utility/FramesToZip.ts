@@ -1,16 +1,10 @@
-import { Response } from "express";
-import archiver from "archiver";
 import { logger } from "../startup/logger";
+import archiver from "archiver";
 
-export default async function FramesToZip(frameData: any, res: Response) {
-  // Create a writable stream to output the zip file
-  const archive = archiver("zip", {
-    zlib: { level: 9 }, // Set compression level
-  });
-
-  // Pipe the archive data to the response object
-  archive.pipe(res);
-
+export default async function FramesToZip(
+  frameData: any,
+  archive: archiver.Archiver
+) {
   // Add each frame as a file in the ZIP archive
   frameData.forEach((frame: any, index: number) => {
     // Get the image stream from the frame
