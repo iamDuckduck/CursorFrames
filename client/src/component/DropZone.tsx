@@ -28,10 +28,12 @@ const Dropzone = () => {
 
   //style for drop area
   const style = {
-    height: "100%",
+    height: "200px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    border: "dashed",
+    borderRadius: "40px",
   };
 
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
@@ -84,18 +86,16 @@ const Dropzone = () => {
   });
 
   return (
-    <>
-      <Box {...getRootProps({ style })}>
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <Text textAlign="center">Drop the files here ...</Text>
-        ) : (
-          <Text textAlign="center">
-            Drag 'n' drop some files here, or click to select files
-          </Text>
-        )}
-      </Box>
-    </>
+    <Box {...getRootProps({ style })}>
+      <input {...getInputProps()} />
+      {isDragActive ? (
+        <Text textAlign="center">Drop the files here ...</Text>
+      ) : (
+        <Text textAlign="center">
+          Drag 'n' drop some files here, or click to select files
+        </Text>
+      )}
+    </Box>
   );
 };
 

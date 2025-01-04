@@ -6,14 +6,12 @@ import ConvertButton from "./component/ConvertButton";
 
 function App() {
   return (
-    <>
+    <Box margin={5}>
       <HomeHeading></HomeHeading>
-      <Box margin={5} height="200px" border="dashed" borderRadius="40px">
-        <Dropzone></Dropzone>
-        <FileList></FileList>
-        <ConvertButton></ConvertButton>
-      </Box>
-    </>
+      <Dropzone></Dropzone>
+      <FileList></FileList>
+      <ConvertButton></ConvertButton>
+    </Box>
   );
 }
 
