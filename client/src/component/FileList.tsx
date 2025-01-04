@@ -8,17 +8,19 @@ import {
   Button,
 } from "@chakra-ui/react";
 import FileAniItem from "./FileAniItem";
-import { useAcceptedFileStore } from "../store";
+import { useAcceptedFileStore, useConvertingStore } from "../store";
 import { FileStatus } from "../entities/fileStatus";
 import { acceptedFile } from "../entities/acceptedFile";
 
 const FileList = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setUpdateFiles = useAcceptedFileStore((s) => s.setUpdateFiles);
-  const filterAndUpdateFiles = (name: string) => {
+  const removeFile = (name: string) => {
     const filteredFile = files.filter((file) => file.name !== name);
     setUpdateFiles(filteredFile);
   };
+
+  const isConverting = useConvertingStore((s) => s.isConverting); //stores accpetedFiles
 
   const handleDownload = (URL: string, file: acceptedFile) => {
     // Create a temporary link element to trigger the download
@@ -65,13 +67,15 @@ const FileList = () => {
             )}
           </Box>
 
-          <CloseButton
-            position="absolute"
-            top="0"
-            right="0"
-            aria-label="cancel"
-            onClick={() => filterAndUpdateFiles(file.name)}
-          ></CloseButton>
+          {!isConverting && file.status !== FileStatus.CONVERTING && (
+            <CloseButton
+              position="absolute"
+              top="0"
+              right="0"
+              aria-label="cancel"
+              onClick={() => removeFile(file.name)}
+            ></CloseButton>
+          )}
         </Box>
       ))}
     </>
