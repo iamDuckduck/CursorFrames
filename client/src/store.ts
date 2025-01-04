@@ -18,3 +18,16 @@ export const useAcceptedFileStore = create<acceptedFileStore>((set) => ({
       files: filteredFiles,
     })),
 }));
+
+interface convertingStore {
+  isConverting: boolean;
+  setIsConverting: (isConverting: boolean) => void;
+}
+
+export const useConvertingStore = create<convertingStore>((set) => ({
+  isConverting: false,
+  setIsConverting: (isConverting: boolean) =>
+    set(() => ({
+      isConverting: isConverting,
+    })),
+}));
