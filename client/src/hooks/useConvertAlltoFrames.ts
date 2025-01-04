@@ -12,12 +12,14 @@ const useConvertAlltoFrames = () => {
   return async () => {
     setIsConverting(true);
     const updatedFiles = files.map((file) => {
-      return Object.assign(file, { status: FileStatus.CONVERTING });
+      if (file.status === FileStatus.UPLOADED)
+        return Object.assign(file, { status: FileStatus.CONVERTING });
+      else return file;
     });
     setUpdateFiles(updatedFiles);
 
     for (const file of files) {
-      await mutateAsync(file);
+      if (file.status === FileStatus.CONVERTING) await mutateAsync(file);
     }
     setIsConverting(false);
   };
