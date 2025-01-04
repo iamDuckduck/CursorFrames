@@ -56,7 +56,15 @@ const FileList = () => {
             <FileAniItem aniFile={file}></FileAniItem>
           )}
 
-          {file.status == FileStatus.CONVERTING ? <Spinner></Spinner> : <></>}
+          <Box position="absolute" bottom="5" right="5">
+            {file.status == FileStatus.CONVERTING && <Spinner></Spinner>}
+            {file.downloadLink && (
+              <Button onClick={() => handleDownload(file.downloadLink, file)}>
+                Download
+              </Button>
+            )}
+          </Box>
+
           <CloseButton
             position="absolute"
             top="0"
@@ -64,13 +72,6 @@ const FileList = () => {
             aria-label="cancel"
             onClick={() => filterAndUpdateFiles(file.name)}
           ></CloseButton>
-          {file.downloadLink ? (
-            <Button
-              onClick={() => handleDownload(file.downloadLink, file)}
-            ></Button>
-          ) : (
-            <></>
-          )}
         </Box>
       ))}
     </>
