@@ -46,7 +46,7 @@ const Dropzone = () => {
         border: "dashed",
         borderRadius: "40px",
         cursor: "not-allowed",
-        "background-color": "rgba(0, 0, 0, 0.5)" /* Semi-dark background */,
+        backgroundColor: "rgba(0, 0, 0, 0.5)" /* Semi-dark background */,
         opacity: 0.5,
       };
 
