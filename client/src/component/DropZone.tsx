@@ -2,10 +2,11 @@ import { Box, Text, useToast } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { acceptedFile } from "../entities/acceptedFile";
-import { useAcceptedFileStore } from "../store";
+import { useAcceptedFileStore, useConvertingStore } from "../store";
 import { FileStatus } from "../entities/fileStatus";
 
 const Dropzone = () => {
+  const isConverting = useConvertingStore((s) => s.isConverting); //stores accpetedFiles
   const toast = useToast(); //ui toast
   const successToast = (fileLength: number) =>
     toast({
@@ -27,14 +28,27 @@ const Dropzone = () => {
     });
 
   //style for drop area
-  const style = {
-    height: "200px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    border: "dashed",
-    borderRadius: "40px",
-  };
+  const style = !isConverting
+    ? {
+        height: "200px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        border: "dashed",
+        borderRadius: "40px",
+        cursor: "pointer",
+      }
+    : {
+        height: "200px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        border: "dashed",
+        borderRadius: "40px",
+        cursor: "not-allowed",
+        "background-color": "rgba(0, 0, 0, 0.5)" /* Semi-dark background */,
+        opacity: 0.5,
+      };
 
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setFiles = useAcceptedFileStore((s) => s.setAcceptedFiles);
@@ -84,6 +98,7 @@ const Dropzone = () => {
     accept: { "image/gif": [".gif"], "image/ani": [".ani"] }, //files we accept
     maxSize: 1024 * 1000 * 10, //max size
     validator: duplicatedValidator(files), //custom validator that prevents duplication
+    disabled: isConverting,
   });
 
   return (
