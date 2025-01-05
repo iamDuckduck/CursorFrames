@@ -53,6 +53,7 @@ const Dropzone = () => {
               preview: URL.createObjectURL(file),
               status: FileStatus.UPLOADED,
               downloadLink: "",
+              errorMsg: "",
             })
           ),
         ];
