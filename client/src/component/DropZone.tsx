@@ -1,5 +1,5 @@
 import { Box, Text, useToast } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { acceptedFile } from "../entities/acceptedFile";
 import { useAcceptedFileStore, useConvertingStore } from "../store";
@@ -68,6 +68,7 @@ const Dropzone = () => {
               status: FileStatus.UPLOADED,
               downloadLink: "",
               errorMsg: "",
+              aniCss: "",
             })
           ),
         ];

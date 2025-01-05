@@ -1,9 +1,11 @@
 import { Box } from "@chakra-ui/react";
 import { convertAniBinaryToCSS } from "ani-cursor";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useAcceptedFileStore } from "../store";
+import { acceptedFile } from "../entities/acceptedFile";
 
 interface Props {
-  aniFile: File;
+  aniFile: acceptedFile;
 }
 
 async function loadArrayBuffer(buffer: ArrayBuffer, fileName: string) {
@@ -30,13 +32,26 @@ function makeCSSForBackground(css: string) {
 }
 
 const FileAniItem = ({ aniFile }: Props) => {
-  const [backgroundCss, setBackgroundCSS] = useState<string>();
+  const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
+  const setUpdateFiles = useAcceptedFileStore((s) => s.setUpdateFiles);
+
+  //i have no idea why {...file,  aniCss: css } not working
+  const objectAssign = (file: acceptedFile, css: string): acceptedFile => {
+    Object.assign(file, { aniCss: css });
+    return file;
+  };
 
   useEffect(() => {
     async function loadExample() {
       const buffer = await aniFile.arrayBuffer();
       const css = await loadArrayBuffer(buffer, aniFile.name); //it returns the background css string
-      setBackgroundCSS(css);
+
+      // Use map to create a new array with updated aniCss property
+      const updatedFiles = files.map((file) =>
+        file.name === aniFile.name ? objectAssign(file, css) : file
+      );
+
+      setUpdateFiles(updatedFiles);
     }
 
     loadExample();
@@ -48,7 +63,7 @@ const FileAniItem = ({ aniFile }: Props) => {
       width="50px"
       backgroundPosition="center"
       backgroundRepeat="no-repeat"
-      css={backgroundCss || ""}
+      css={aniFile.aniCss || ""}
     ></Box>
   );
 };

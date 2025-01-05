@@ -34,4 +34,28 @@ router.post(
   }
 );
 
+// const matches = [...css.matchAll(/url\((.*?)\)/g)].map((match) => match[1]);
+// console.log(matches);
+// router.post(
+//   "/aniToFrames",
+//   upload.single("file"),
+//   async (req, res): Promise<any> => {
+//     if (!req.file)
+//       return res.status(400).json({ message: "No file uploaded." });
+
+//     res.setHeader("Content-Type", "application/zip");
+//     res.attachment(`${req.file.originalname.split(".")[0]}.zip`);
+
+//     // Create a writable stream to output the zip file
+//     const archive = archiver("zip", {
+//       zlib: { level: 9 }, // Set compression level
+//     });
+
+//     // Pipe the archive data to the response object
+//     archive.pipe(res);
+
+//     await FramesToZip(frameData, archive); //
+//   }
+// );
+
 export { router };

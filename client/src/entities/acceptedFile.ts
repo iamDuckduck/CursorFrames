@@ -4,5 +4,6 @@ export interface acceptedFile extends File {
   preview: string;
   status: FileStatus;
   downloadLink: string;
-  errorMsg: string; //no error no msg
+  errorMsg?: string;
+  aniCss?: string;
 }
