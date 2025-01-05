@@ -12,14 +12,20 @@ const useConvertAlltoFrames = () => {
   return async () => {
     setIsConverting(true);
     const updatedFiles = files.map((file) => {
-      if (file.status === FileStatus.UPLOADED)
+      if (
+        file.status === FileStatus.UPLOADED ||
+        file.status === FileStatus.ERROR
+      )
         return Object.assign(file, { status: FileStatus.CONVERTING });
       else return file;
     });
     setUpdateFiles(updatedFiles);
 
     for (const file of files) {
-      if (file.status === FileStatus.CONVERTING) await mutateAsync(file);
+      if (file.status === FileStatus.CONVERTING)
+        //the error handling is handled by onError inside mutation
+        //here we have to catch the rejected promise
+        await mutateAsync(file).catch((err) => err);
     }
     setIsConverting(false);
   };

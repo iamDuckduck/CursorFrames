@@ -9,17 +9,26 @@ const apiClent = new APIClient("/toFrames/gifToFrames");
 
 const updateFileStatus = (
   files: acceptedFile[],
-  gifFile: File,
+  fileToConvert: File,
   status: FileStatus,
-  zipFile?: Blob
+  zipFile?: Blob,
+  errorMsg?: string
 ) => {
-  let updateProperty = { status: status, downloadLink: "" };
+  let updateProperty = {
+    status: status,
+    downloadLink: "",
+    errorMsg: errorMsg,
+  };
   //update the status of specific file
   const updatedFiles = files.map((file) => {
-    if (file.name === gifFile.name && status == FileStatus.SUCCESS && zipFile) {
+    if (
+      file.name === fileToConvert.name &&
+      status == FileStatus.SUCCESS &&
+      zipFile
+    ) {
       updateProperty.downloadLink = URL.createObjectURL(zipFile);
       return Object.assign(file, updateProperty);
-    } else if (file.name === gifFile.name) {
+    } else if (file.name === fileToConvert.name) {
       return Object.assign(file, updateProperty);
     } else return file;
   });
@@ -49,8 +58,16 @@ const useGiftoFrames = () => {
       );
       setUpdateFiles(updatedFiles);
     },
-    onError() {
+    onError(errorMsg: AxiosError<unknown, any>, fileToConvert: File) {
       //set file property status as error..?
+      const updatedFiles = updateFileStatus(
+        files,
+        fileToConvert,
+        FileStatus.ERROR,
+        undefined,
+        errorMsg.message
+      );
+      setUpdateFiles(updatedFiles);
     },
   });
 };

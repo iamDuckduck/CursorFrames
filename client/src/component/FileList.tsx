@@ -43,7 +43,7 @@ const FileList = () => {
           marginY={3}
         >
           <Text paddingBottom={5}>{file.name}</Text>
-
+          {file.status === FileStatus.ERROR && <Text>{file.errorMsg}</Text>}
           {file.name.split(".")[1] == "gif" ? (
             <Image
               src={file.preview}
