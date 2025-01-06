@@ -4,10 +4,10 @@ const homeHeading = () => {
   return (
     <Box textAlign="center">
       <Heading paddingBottom={2} fontSize="50px">
-        Gif/Ani to Gif Frames Converter
+        Gif/Ani to Frames Converter
       </Heading>
       <Text fontSize="20px">
-        Best tool to convert Gif/Ani to Frames animations online for free.
+        A tool to convert Gif/Ani to individual Frames online for free.
       </Text>
     </Box>
   );
