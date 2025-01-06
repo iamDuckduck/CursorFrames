@@ -3,6 +3,7 @@ import multer from "multer";
 import FramesToZip from "../utility/FramesToZip";
 import gifToFrames from "../utility/gifToFrames";
 import archiver from "archiver";
+import aniFramesToZip from "../utility/aniFramesToZip";
 
 const router = Express.Router();
 
@@ -34,28 +35,27 @@ router.post(
   }
 );
 
-// const matches = [...css.matchAll(/url\((.*?)\)/g)].map((match) => match[1]);
-// console.log(matches);
-// router.post(
-//   "/aniToFrames",
-//   upload.single("file"),
-//   async (req, res): Promise<any> => {
-//     if (!req.file)
-//       return res.status(400).json({ message: "No file uploaded." });
+router.post("/aniToFrames", async (req, res): Promise<any> => {
+  // should add error handling when aniCss is empty...?
 
-//     res.setHeader("Content-Type", "application/zip");
-//     res.attachment(`${req.file.originalname.split(".")[0]}.zip`);
+  const aniPostObject = req.body;
+  res.setHeader("Content-Type", "application/zip");
+  res.attachment(`${aniPostObject.fileName.split(".")[0]}.zip`);
 
-//     // Create a writable stream to output the zip file
-//     const archive = archiver("zip", {
-//       zlib: { level: 9 }, // Set compression level
-//     });
+  // Match all `url()` occurrences and extract the content inside them
+  const matches = [...aniPostObject.aniCss.matchAll(/url\((.*?)\)/g)].map(
+    (match) => match[1]
+  );
 
-//     // Pipe the archive data to the response object
-//     archive.pipe(res);
+  // Create a writable stream to output the zip file
+  const archive = archiver("zip", {
+    zlib: { level: 9 }, // Set compression level
+  });
 
-//     await FramesToZip(frameData, archive); //
-//   }
-// );
+  // Pipe the archive data to the response object
+  archive.pipe(res);
+
+  await aniFramesToZip(matches, archive, aniPostObject.fileName);
+});
 
 export { router };
