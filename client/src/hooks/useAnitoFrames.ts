@@ -5,6 +5,7 @@ import { useAcceptedFileStore } from "../store";
 import { FileStatus } from "../entities/fileStatus";
 import { updateFileStatus } from "./useConvertAlltoFrames";
 import { acceptedFile } from "../entities/acceptedFile";
+import { aniPostObject } from "../entities/aniPostObject";
 
 const apiClent = new APIClient("/toFrames/aniToFrames");
 
@@ -20,7 +21,12 @@ const useAnitoFrames = () => {
         FileStatus.CONVERTING
       );
       setUpdateFiles(updatedFiles);
-      return apiClent.framesPost(fileToConvert);
+
+      const aniObject: aniPostObject = {
+        aniCss: fileToConvert.aniCss || "",
+        fileName: fileToConvert.name,
+      };
+      return apiClent.aniToFramesPost(aniObject);
     },
     onSuccess(convertedFile: Blob, fileToConvert: acceptedFile) {
       const updatedFiles = updateFileStatus(
