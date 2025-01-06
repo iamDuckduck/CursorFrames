@@ -4,50 +4,23 @@ import { AxiosError } from "axios";
 import { useAcceptedFileStore } from "../store";
 import { FileStatus } from "../entities/fileStatus";
 import { acceptedFile } from "../entities/acceptedFile";
+import { updateFileStatus } from "./useConvertAlltoFrames";
 
 const apiClent = new APIClient("/toFrames/gifToFrames");
-
-const updateFileStatus = (
-  files: acceptedFile[],
-  fileToConvert: File,
-  status: FileStatus,
-  zipFile?: Blob,
-  errorMsg?: string
-) => {
-  let updateProperty = {
-    status: status,
-    downloadLink: "",
-    errorMsg: errorMsg,
-  };
-  //update the status of specific file
-  const updatedFiles = files.map((file) => {
-    if (
-      file.name === fileToConvert.name &&
-      status == FileStatus.SUCCESS &&
-      zipFile
-    ) {
-      updateProperty.downloadLink = URL.createObjectURL(zipFile);
-      return Object.assign(file, updateProperty);
-    } else if (file.name === fileToConvert.name) {
-      return Object.assign(file, updateProperty);
-    } else return file;
-  });
-  return updatedFiles;
-};
 
 const useGiftoFrames = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setUpdateFiles = useAcceptedFileStore((s) => s.setUpdateFiles);
 
-  return useMutation<any, AxiosError, File>({
-    mutationFn: (fileToConvert: File) => {
+  return useMutation<any, AxiosError, acceptedFile>({
+    mutationFn: (fileToConvert: acceptedFile) => {
       const updatedFiles = updateFileStatus(
         files,
         fileToConvert,
         FileStatus.CONVERTING
       );
       setUpdateFiles(updatedFiles);
-      return apiClent.post(fileToConvert);
+      return apiClent.framesPost(fileToConvert);
     },
     onSuccess(convertedFile: Blob, fileToConvert: File) {
       const updatedFiles = updateFileStatus(

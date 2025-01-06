@@ -1,6 +1,7 @@
 import { useAcceptedFileStore, useConvertingStore } from "../store";
 import useGiftoFrames from "../hooks/useGiftoFrames";
 import { FileStatus } from "../entities/fileStatus";
+import { acceptedFile } from "../entities/acceptedFile";
 
 const useConvertAlltoFrames = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
@@ -29,14 +30,43 @@ const useConvertAlltoFrames = () => {
     }
     setIsConverting(false);
   };
+};
 
-  // return () =>
-  //   useEffect(() => {
-  //     const matchedFile = files.find(
-  //       (file) => file.status === FileStatus.UPLOADED
-  //     );
-  //     if (matchedFile) mutate(matchedFile);
-  //   }, [files]);
+//utility function
+export const updateFileStatus = (
+  files: acceptedFile[],
+  fileToConvert: File,
+  status: FileStatus,
+  zipFile?: Blob,
+  errorMsg?: string
+) => {
+  let updateProperty = {
+    status: status,
+    downloadLink: "",
+    errorMsg: errorMsg,
+  };
+  //update the status of specific file
+  const updatedFiles = files.map((file) => {
+    if (
+      file.name === fileToConvert.name &&
+      status == FileStatus.SUCCESS &&
+      zipFile
+    ) {
+      updateProperty.downloadLink = URL.createObjectURL(zipFile);
+      return Object.assign(file, updateProperty);
+    } else if (file.name === fileToConvert.name) {
+      return Object.assign(file, updateProperty);
+    } else return file;
+  });
+  return updatedFiles;
 };
 
 export default useConvertAlltoFrames;
+
+// return () =>
+//   useEffect(() => {
+//     const matchedFile = files.find(
+//       (file) => file.status === FileStatus.UPLOADED
+//     );
+//     if (matchedFile) mutate(matchedFile);
+//   }, [files]);

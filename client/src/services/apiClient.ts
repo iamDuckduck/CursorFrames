@@ -1,4 +1,5 @@
 import axios from "axios";
+import { acceptedFile } from "../entities/acceptedFile";
 
 const axiosInstance = axios.create({
   baseURL:
@@ -16,7 +17,7 @@ class APIClient {
     this.endpoint = endpoint;
   }
 
-  post = (data: File) => {
+  framesPost = (data: acceptedFile) => {
     const formData = new FormData(); //wrap the file with FormData
     formData.append("file", data);
     return axiosInstance.post(this.endpoint, formData).then((res) => res.data); // return the blob data here
