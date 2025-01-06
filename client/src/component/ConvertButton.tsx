@@ -8,12 +8,13 @@ const ConvertButton = () => {
   const isConverting = useConvertingStore((s) => s.isConverting); //stores accpetedFiles
   const ConvertAlltoFrames = useConvertAlltoFrames();
 
-  const uploadedFiles = files.find(
-    (file) => file.status === FileStatus.UPLOADED
+  const notProcessedFiles = files.find(
+    (file) =>
+      file.status === FileStatus.UPLOADED || file.status === FileStatus.ERROR
   );
   return (
     <>
-      {uploadedFiles && !isConverting && (
+      {notProcessedFiles && !isConverting && (
         <Button onClick={ConvertAlltoFrames}>Convert</Button>
       )}
     </>
