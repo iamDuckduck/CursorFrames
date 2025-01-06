@@ -17,11 +17,11 @@ router.post(
   async (req, res): Promise<any> => {
     if (!req.file)
       return res.status(400).json({ message: "No file uploaded." });
-    const decodedFileName = decodeURIComponent(
-      req.file.originalname.split(".")[0]
-    );
+    // const decodedFileName = decodeURIComponent(
+    //   req.file.originalname.split(".")[0]
+    // );
     res.setHeader("Content-Type", "application/zip");
-    res.attachment(`${decodedFileName}.zip`);
+    res.attachment(`${1}.zip`);
 
     const frameData = await gifToFrames(req.file?.buffer);
 
