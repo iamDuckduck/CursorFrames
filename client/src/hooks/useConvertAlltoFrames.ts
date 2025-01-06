@@ -2,12 +2,14 @@ import { useAcceptedFileStore, useConvertingStore } from "../store";
 import useGiftoFrames from "../hooks/useGiftoFrames";
 import { FileStatus } from "../entities/fileStatus";
 import { acceptedFile } from "../entities/acceptedFile";
+import useAnitoFrames from "./useAnitoFrames";
 
 const useConvertAlltoFrames = () => {
   const files = useAcceptedFileStore((s) => s.files); //stores accpetedFiles
   const setUpdateFiles = useAcceptedFileStore((s) => s.setUpdateFiles);
   const setIsConverting = useConvertingStore((s) => s.setIsConverting); //stores accpetedFiles
-  const { mutateAsync } = useGiftoFrames();
+  const { mutateAsync: asyncGifMutate } = useGiftoFrames();
+  const { mutateAsync: asyncAniMutate } = useAnitoFrames();
 
   //maybe refactor the setIsConverting..? looks weird
   return async () => {
@@ -23,10 +25,18 @@ const useConvertAlltoFrames = () => {
     setUpdateFiles(updatedFiles);
 
     for (const file of files) {
-      if (file.status === FileStatus.CONVERTING)
+      if (
+        file.status === FileStatus.CONVERTING &&
+        file.name.split(".")[1] == "gif"
+      )
         //the error handling is handled by onError inside mutation
         //here we have to catch the rejected promise
-        await mutateAsync(file).catch((err) => err);
+        await asyncGifMutate(file).catch((err) => err);
+      else if (
+        file.status === FileStatus.CONVERTING &&
+        file.name.split(".")[1] == "ani"
+      )
+        await asyncAniMutate(file).catch((err) => err);
     }
     setIsConverting(false);
   };
