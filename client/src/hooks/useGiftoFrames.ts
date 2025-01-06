@@ -20,7 +20,7 @@ const useGiftoFrames = () => {
         FileStatus.CONVERTING
       );
       setUpdateFiles(updatedFiles);
-      return apiClent.framesPost(fileToConvert);
+      return apiClent.gifToFramesPost(fileToConvert);
     },
     onSuccess(convertedFile: Blob, fileToConvert: File) {
       const updatedFiles = updateFileStatus(
