@@ -12,7 +12,6 @@ export const enableCors = function (app: Express) {
         : "https://cursor-frames-client.vercel.app",
     // Allow requests from this origin
     methods: "GET,PUT,POST,DELETE", // Allow these HTTP methods
-    //   credentials: true,
   };
   app.use(cors(corsOptions));
   // }
