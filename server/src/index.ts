@@ -8,7 +8,7 @@ const app = express();
 const env = process.env.NODE_ENV;
 
 handleRejection(); //it handles unhandled rejected promise outside the route scope
-enableCors(app); //enable cors when it's in development, disable in production
+// enableCors(app); //enable cors when it's in development, disable in production
 routes(app); //set up all the routes
 
 const port = 3000;
