@@ -58,7 +58,7 @@ npm run dev
 - Download the frames one by one for use in Mousecape to create an animated cursor.
 
 # Contributing
-- This project wouldn't have been possible without the ani-cursor package. It provides an awesome method for rendering Windows Animated Cursor files (.ani) in the browser by parsing out the individual frames and constructing a CSS animation. Thanks to their work, this project was made possible!
+- This project wouldn't have been possible without the ani-cursor package. It provides an awesome method for rendering Windows Animated Cursor files (.ani) in the browser by parsing out the individual frames and constructing a CSS animation. Thanks to their work.
 
 
   
